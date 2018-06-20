@@ -9,7 +9,7 @@ var ArticleSchema = new Schema({
   // `title` is required and of type String
   title: {
     type: String,
-    // unique:true,
+    unique:true,
     required: true
   },
   // `link` is required and of type String
@@ -23,6 +23,10 @@ var ArticleSchema = new Schema({
   },
   imglink:{
     type: String,
+    required: false
+  },
+  saved:{
+    type:Boolean,
     required: false
   },
   // `note` is an object that stores a Note id
