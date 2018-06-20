@@ -125,6 +125,17 @@ app.put("/saveArticle/:id", function(req, res) {
 
   var id = req.params.id;
   db.Article.findOneAndUpdate( {_id:id},{$set:{saved:true}})   //  db.Article.findOne(_id: id)
+  // .populate("note")
+  .then(function(dbArticle) {
+    res.json(dbArticle);
+  })
+});
+
+//deleting 
+app.put("/removeArticle/:id", function(req, res) {
+  var newVal = req.body.saved ; // testing grab value out of updating method through req.body
+  var id = req.params.id;
+  db.Article.findOneAndUpdate( {_id:id},{$set:{saved:newVal}})   //  db.Article.findOne(_id: id)
   .populate("note")
   .then(function(dbArticle) {
     res.json(dbArticle);
