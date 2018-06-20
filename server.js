@@ -71,11 +71,11 @@ app.get("/scrape", function(req, res) {
       result.link = $(this)
         .parent("a")
         .attr("href");
-      result.imglink = $(this)
-        .parent("a")
-        .children("div.wide-thumb")
-        // .next("div.wide-thumb")
-        .attr("src");
+      // result.imglink = $(this)
+      //   .parent("a")
+      //   .children("div.wide-thumb")
+      //   // .next("div.wide-thumb")
+      //   .attr("src");
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)

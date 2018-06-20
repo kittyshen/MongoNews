@@ -1,20 +1,29 @@
 
-<div class="row top-nav">
-    <nav class="nav">
-        <span>
-        </span>
+<div class=" top-nav">
+  <nav class="navbar  navbar-expand-md fixed-top bg-light navbar-light justify-content-between">
+  <a class="navbar-brand" href= "/"><img src="assets/images/logo.png" alt="logo"></a>
 
-    </nav>
-</div>
-<nav class="navbar bg-light navbar-light justify-content-between">
-  <a class="navbar-brand" href= "/"><img src="assets/images/" alt="logo"></a>
-  <form action="/scrape" method="get">
+  <div class=" navbar-collapse " id="navbarNav">
+    <ul class="navbar-nav navbar-right">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Saved Article</a>
+      </li>
+    </ul>
+  </div>
+  
+  
+  {{!-- <form action="/scrape" method="get">
 
-    <button id = "scrapexx" class="btn btn-outline-success " type="submit" >Search for new Articles</button>
-  </form>
+    <button id = "scrapexx" class="btn btn-danger" type="submit" >Search for new Articles</button>
+  </form> --}}
 </nav>
+</div>
 
-<div class="container_landing">
+<row>
+ <div class="container_landing">
 
     <!-- a Bootstrap row with columns -->
     <div class="row">
@@ -22,44 +31,37 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div id = "landingjumbotron" class="jumbotron jumbotron-fluid">
                 <p class="text-center">
-                    <button id="scrape" class="btn btn-outline-success " type="submit">Search for new Articles</button>
+                    <button id="scrape" class="btn btn-danger " type="submit"><span class="fa fa-search"> &nbsp;</span>Search for new Articles</button>
                 </p>
             </div>
             <div class = "col-md-12 col-sm-12">
                 <ul>
                   {{#each article}}
-                      <div class ="alert alert-info ">
+                      <div class ="alert alert-dark ">
                         <li>
-                          <p>{{title}}</p>
+                          <h5>{{title}}</h5>
                           <p> Summary: {{summary}}</p>
                           <p> Article Link: <a href = {{link}} >{{link}}</a></p>
 
-                          <img src={{imglink}} width =80px alt="catbaby">
+                          {{!-- <img src={{imglink}} width =80px alt="article img thumb"> --}}
                           <form id ="adoptCat"  method="POST">
-                          <input type="text"  name="ownername{{id}}" placeholder="Enter your name to adopt">
+                          {{!-- <input type="text"  name="ownername{{id}}" placeholder="Enter your name to adopt"> --}}
 
-                          <button type="submit" class = "btn btn-primary adpBtn" data-id={{_id}}>Adopt Meow</button>
+                          <button type="submit" class = "btn btn-danger saveBtn" data-id={{_id}}>Save Article </button>
                           </form>
                         </li>
                       </div>
                   {{/each}}
                 </ul>
               </div>
-
-
-              <div class ="text-center col-md-4 col-sm-4">
-                <form id ="addCat"  method="POST">
-                  <input type="text" name="catname" placeholder="Enter cat name">
-
-                  <button class ="btn btn-primary " type="submit">Submit</button>
-                </form>
-              </div>
             
         </div>
 
     </div>
 
-</div>
+</div> 
+</row>
+
 <hr>
 
 
@@ -71,7 +73,10 @@
 
 <script type = "text/javascript">
 $("#scrape").on("click",function(){
-  $.get("/");
+  $.get("/scrape",function(data){
+    console.log(data);
+    location.reload();
+  });
 })
 </script>
 
