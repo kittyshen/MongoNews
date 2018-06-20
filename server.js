@@ -27,12 +27,27 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Use express.static to serve the public folder as a static directory
 app.use(express.static("public"));
 
+//handlebar rendering
+var exphbs = require("express-handlebars");
+
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+
+
 // Connect to the Mongo DB
 mongoose.connect("mongodb://localhost/mongoHeadlines");
 
 // Routes
 
 // A GET route for scraping the echoJS website
+app.get("/",function(req,res){
+  db.Article.find({})
+  .then(function(dbArticle){
+    // res.json(dbArticle);
+    res.render("index",{article:dbArticle});
+  })
+})
+
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with request
   // axios.get("http://www.echojs.com/").then(function(response) {
@@ -42,20 +57,25 @@ app.get("/scrape", function(req, res) {
     var $ = cheerio.load(html);
 
     // Now, we grab every h2 within an article tag, and do the following:
-    $("h2.headline").each(function(i, element) {
+    $("div.story-meta").each(function(i, element) {
       // Save an empty result object
       var result = {};
-
+      console.log("Crappe : sdajhdkhskdj",$(this).parent("a").children("div.wide-thumb"));//.attr("src")
       // Add the text and href of every link, and save them as properties of the result object
       result.title = $(this)
-        .children("a")
+        .children("h2.headline")
         .text();
-      result.summery = $(this)
-        .children("p")
+      result.summary = $(this)
+        .children("p.summary")
         .text();
       result.link = $(this)
-        .children("a")
+        .parent("a")
         .attr("href");
+      result.imglink = $(this)
+        .parent("a")
+        .children("div.wide-thumb")
+        // .next("div.wide-thumb")
+        .attr("src");
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)

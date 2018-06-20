@@ -7,10 +7,12 @@
     </nav>
 </div>
 <nav class="navbar bg-light navbar-light justify-content-between">
-    <a class="navbar-brand" href= "/"><img src="assets/images/" alt="logo"></a>
-    <button id = "scrape" class="btn btn-outline-success " data-target="#loginModal" type="submit" >Search for new Articles</button>
+  <a class="navbar-brand" href= "/"><img src="assets/images/" alt="logo"></a>
+  <form action="/scrape" method="get">
 
-  </nav>
+    <button id = "scrapexx" class="btn btn-outline-success " type="submit" >Search for new Articles</button>
+  </form>
+</nav>
 
 <div class="container_landing">
 
@@ -19,12 +21,39 @@
         <!-- At large+ or medium screens takes up 2/3 width (8/12) small take full screen 12/12 -->
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div id = "landingjumbotron" class="jumbotron jumbotron-fluid">
-
-                <p class="text-center"><button id="signup" class="btn btn-outline-success" data-target="#signUpModal" type="submit">Sign Up</button></p>
-
+                <p class="text-center">
+                    <button id="scrape" class="btn btn-outline-success " type="submit">Search for new Articles</button>
+                </p>
             </div>
-            <!-- sign-up log-in form popup here -->
+            <div class = "col-md-12 col-sm-12">
+                <ul>
+                  {{#each article}}
+                      <div class ="alert alert-info ">
+                        <li>
+                          <p>{{title}}</p>
+                          <p> Summary: {{summary}}</p>
+                          <p> Article Link: <a href = {{link}} >{{link}}</a></p>
 
+                          <img src={{imglink}} width =80px alt="catbaby">
+                          <form id ="adoptCat"  method="POST">
+                          <input type="text"  name="ownername{{id}}" placeholder="Enter your name to adopt">
+
+                          <button type="submit" class = "btn btn-primary adpBtn" data-id={{_id}}>Adopt Meow</button>
+                          </form>
+                        </li>
+                      </div>
+                  {{/each}}
+                </ul>
+              </div>
+
+
+              <div class ="text-center col-md-4 col-sm-4">
+                <form id ="addCat"  method="POST">
+                  <input type="text" name="catname" placeholder="Enter cat name">
+
+                  <button class ="btn btn-primary " type="submit">Submit</button>
+                </form>
+              </div>
             
         </div>
 
@@ -41,6 +70,8 @@
 {{!-- <script src="assets/javascript/scrapeControl.js"></script> --}}
 
 <script type = "text/javascript">
-
+$("#scrape").on("click",function(){
+  $.get("/");
+})
 </script>
 
