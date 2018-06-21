@@ -56,7 +56,13 @@ h5{
     background-color: rgb(230, 150, 51);
     border:0;
 }
-
+.btn-info{
+    border:0;
+    color:darkred;
+    background-color: rgb(232, 204, 143);
+    padding:0.2em  0.5em;
+    margin-top: 0.5em;
+}
 
 #landingjumbotron{
     /* background-image:url("https://pmcdeadline2.files.wordpress.com/2016/10/the-new-york-times-logo-featured.jpg?w=446&h=299&crop=1"); */

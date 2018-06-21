@@ -41,7 +41,7 @@ mongoose.connect("mongodb://localhost/mongoHeadlines");
 
 // A GET route for scraping the echoJS website
 app.get("/",function(req,res){
-  db.Article.find({})
+  db.Article.find({}).sort({_id:-1})
   .then(function(dbArticle){
     // res.json(dbArticle);
     res.render("index",{article:dbArticle});
@@ -50,8 +50,8 @@ app.get("/",function(req,res){
 
 app.get("/save", function(req, res) {
   // TODO: Finish the route so it grabs all of the articles
-  db.Article.find({saved:true})  
-  .populate("note")
+  db.Article.find({saved:true}).sort({_id:-1})  
+  .populate("notes")
   .then(function(dbArticle) {
     // res.json(dbArticle);
     res.render("save",{article:dbArticle});
@@ -97,6 +97,7 @@ app.get("/scrape", function(req, res) {
         })
         .catch(function(err) {
           // If an error occurred, send it to the client
+          console.log(err);
           return res.json(err);
           // return res.send(err);
         });
@@ -106,13 +107,13 @@ app.get("/scrape", function(req, res) {
     res.send("Scrape Complete");
   })
 
-});
+}) ;
 
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {
   // TODO: Finish the route so it grabs all of the articles
   db.Article.find({})  
-  .populate("note")
+  .populate("notes")
   .then(function(dbArticle) {
     res.json(dbArticle);
   })
@@ -125,48 +126,32 @@ app.put("/saveArticle/:id", function(req, res) {
 
   var id = req.params.id;
   db.Article.findOneAndUpdate( {_id:id},{$set:{saved:true}})   //  db.Article.findOne(_id: id)
-  // .populate("note")
+  // .populate("notes")
   .then(function(dbArticle) {
     res.json(dbArticle);
   })
 });
 
-//deleting 
+//deleting from saved
 app.put("/removeArticle/:id", function(req, res) {
   var newVal = req.body.saved ; // testing grab value out of updating method through req.body
   var id = req.params.id;
   db.Article.findOneAndUpdate( {_id:id},{$set:{saved:newVal}})   //  db.Article.findOne(_id: id)
-  .populate("note")
+  .populate("notes")
   .then(function(dbArticle) {
     res.json(dbArticle);
   })
 });
 
-app.post("/articles/:id", function(req, res) {
+//route for display a note to a article
+app.get("/articles/:id", function(req, res) {
 
-  db.Note.create(req.body)
-  .then(function(dbNote) {
-    // View the added result in the console
-    console.log(dbNote._id);
-    return dbNote._id;
+  var id = req.params.id;
+  db.Article.findOne( {_id:id})   //  db.Article.findOne(_id: id)
+  .populate("notes")
+  .then(function(dbArticle) {
+    res.json(dbArticle);
   })
-  .then(function(data){
-    var id = req.params.id;
-    console.log(data);  //data contain the new note's id
-    return db.Article.findOneAndUpdate({_id:id},{$set:{note:data}})
-    // .then(function(dbArticle) {
-    //   res.json(dbArticle);
-    // })
-  })
-  .catch(function(err) {
-    // If an error occurred, send it to the client
-    return res.json(err);
-  });
-
-  // save to article
-  // then find an article from the req.params.id
-  // and update it's "note" property with the _id of the new note
-  
 
 });
 
@@ -182,7 +167,7 @@ app.post("/articles/:id", function(req, res) {
   .then(function(data){
     var id = req.params.id;
     console.log(data);  //data contain the new note's id
-    return db.Article.findOneAndUpdate({_id:id},{$set:{note:data}})
+    return db.Article.findOneAndUpdate({_id:id},{$push:{notes:data}})
     // .then(function(dbArticle) {
     //   res.json(dbArticle);
     // })
@@ -191,11 +176,6 @@ app.post("/articles/:id", function(req, res) {
     // If an error occurred, send it to the client
     return res.json(err);
   });
-
-  // save to article
-  // then find an article from the req.params.id
-  // and update it's "note" property with the _id of the new note
-  
 
 });
 

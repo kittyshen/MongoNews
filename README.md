@@ -73,6 +73,28 @@ mongoose.connect(MONGODB_URI);
 * [Mongoose Documentation](http://mongoosejs.com/docs/api.html)
 * [Cheerio Documentation](https://github.com/cheeriojs/cheerio)
 
+## learning points
+
+```js
+// mongo db CRUD insert read update delete quick reference
+db.zoo.insert({name:"cat", numlegs:"4", class:"mammal", weight:10})
+db.zoo.insert({name:"dog", numlegs:"4", class:"mammal", weight:20})
+//  How to sort by id:
+db.zoo.find().sort({_id:1})
+// Update one key value pair
+db.places.update({"country": "Morocco"}, {$set: {"capital":"RABAT"}})
+// How to push to an array with $push
+db.places.update({"country": "Morocco"}, {$push: {"majorcities":"Agadir"}})
+// How to delete an entry with db.[COLLECTION_NAME].remove()
+db.places.remove({"country":"Morocco"})
+// How to empty a collection with db.[COLLECTION_NAME].remove()
+db.places.remove({})
+// How to drop a collection with db.[COLLECTION_NAME].drop()
+db.places.drop()
+// How to drop a database
+db.dropDatabase()
+```
+
 
 ## Link to the site
 [https://kitty-mongonews.herokuapp.com/](https://kitty-mongonews.herokuapp.com/)

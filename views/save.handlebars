@@ -24,7 +24,40 @@
 
 <row>
  <div class="container_landing">
+    <row>
+      <div class="modal" tabindex="-1" id="NoteModal" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class=" text-center modal-title">Note</h4>
+              <button type="button" id="NoteClose" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+    
+            <div class="modal-body">
+              {{!-- display old notes here --}}
+              <div id="note"></div>
+              <form id="Form">
+                <div class="form-group">
 
+                  {{!-- <label class="label-control">Notes </label> --}}
+                  {{!-- <input placeholder="your notes" type="textarea" class="form-control" id="Notes"> --}}
+                  {{!-- <textarea placeholder="your notes" type="textarea" cols="30" rows="10" class="form-control" id="newNote"> </textarea> --}}
+                
+                </div>
+
+              </form>
+    
+            </div>
+            {{!-- <div class="modal-footer">
+              <button type="submit" id="addnote_btn" class="btn btn-success btn-outline-success submit">Submit</button>
+            </div> --}}
+          </div>
+        </div>
+      </div>
+    
+    </row>
     <!-- a Bootstrap row with columns -->
     <div class="row">
         <!-- At large+ or medium screens takes up 2/3 width (8/12) small take full screen 12/12 -->
@@ -44,8 +77,8 @@
                           {{!-- <img src={{imglink}} width =80px alt="article img thumb"> --}}
                           {{!-- <input type="text"  name="ownername{{id}}" placeholder="Enter your name to adopt"> --}}
 
-                          <button type="submit" class = "btn btn-danger removeBtn" data-id={{_id}}>Remove from saved </button>
-                          <button type="submit" class = "btn btn-danger addNoteBtn" data-id={{_id}}>Add Note </button>
+                          <button type="submit" class = "btn btn-info removeBtn" data-id={{_id}}>Remove from saved </button>
+                          <button type="submit" class = "btn btn-info addNoteBtn" data-id={{_id}}>Add Note </button>
                         </li>
                       </div>
                   {{/each}}
@@ -84,5 +117,83 @@ $(".removeBtn").on("click",function(event){
       location.reload();
 	});
 });
+
+
+//deal with adding notes front end
+$(document).on("click", ".addNoteBtn", function() {
+		$("#NoteModal").show();
+});
+$(document).on("click","#NoteClose",function(){
+        $("#NoteModal").hide();
+});
+
+var articleId;
+$(document).on("click", ".addNoteBtn", function() {
+  // Empty the notes from the note section
+  $("#note").empty();
+  // Save the id from the addNoteBtn
+  var thisId = $(this).attr("data-id");
+  articleId = $(this).attr("data-id");  // save the article id to a globe variable for later add note usage
+  // Now make an ajax call for the Article
+  $.ajax({
+    method: "GET",
+    url: "/articles/" + thisId
+  })
+    // With that done, add the note information to the page
+  .then(function(data) {
+      console.log(data);
+      console.log(data._id);
+      // The title of the article
+      $("#note").append("<h4>" + data.title + "</h4>");
+      // An input to enter a new title
+      $("#note").append("<input placeholder='your title' class='form-control' id='titleinput' name='title' >");
+      // A textarea to add a new note body
+      $("#note").append("<textarea placeholder='your note' class='form-control' id='bodyinput' name='body' cols='50' rows='10'></textarea>");
+      // A button to submit a new note, with the id of the article saved to it
+      $("#note").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-info'>Save Note</button>");
+
+      // If there's a note in the article
+      if (data.notes) {
+        // Place the title of the note in the title input
+        $("#titleinput").val(data.notes.title);
+        // Place the body of the note in the body textarea
+        $("#bodyinput").val(data.notes.body);
+      }
+    });
+});
+
+// When you click the savenote button
+$(document).on("click", "#savenote", function() {
+  // Grab the id associated with the article from the submit button
+  //var thisId = articleId;  //pass the article here
+  var thisId = $(this).attr("data-id");
+
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "POST",
+    url: "/articles/" + thisId,
+    data: {
+      // Value taken from title input
+      title: $("#titleinput").val(),
+      // Value taken from note textarea
+      body: $("#bodyinput").val()
+    }
+  })
+    // With that done
+    .then(function(data) {
+      // Log the response
+      console.log(data);
+      // Empty the notes section
+      $("#note").empty();
+    });
+
+  // Also, remove the values entered in the input and textarea for note entry
+  $("#titleinput").val("");
+  $("#bodyinput").val("");
+  //close the modal
+  $("#NoteModal").hide();
+
+});
+
 </script>
 
