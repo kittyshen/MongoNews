@@ -37,10 +37,10 @@
     
             <div class="modal-body">
               {{!-- display old notes here --}}
-              <div id="note"></div>
+              
               <form id="Form">
                 <div class="form-group">
-
+                <div id="note"></div>
                   {{!-- <label class="label-control">Notes </label> --}}
                   {{!-- <input placeholder="your notes" type="textarea" class="form-control" id="Notes"> --}}
                   {{!-- <textarea placeholder="your notes" type="textarea" cols="30" rows="10" class="form-control" id="newNote"> </textarea> --}}
@@ -48,7 +48,8 @@
                 </div>
 
               </form>
-    
+              {{!-- display old notes here --}}
+              <div id="oldNotes">Older Notes</div>
             </div>
             {{!-- <div class="modal-footer">
               <button type="submit" id="addnote_btn" class="btn btn-success btn-outline-success submit">Submit</button>
@@ -146,18 +147,18 @@ $(document).on("click", ".addNoteBtn", function() {
       // The title of the article
       $("#note").append("<h4>" + data.title + "</h4>");
       // An input to enter a new title
-      $("#note").append("<input placeholder='your title' class='form-control' id='titleinput' name='title' >");
+      $("#note").append("<input placeholder='your name' class='form-control' id='titleinput' name='title' >");
       // A textarea to add a new note body
-      $("#note").append("<textarea placeholder='your note' class='form-control' id='bodyinput' name='body' cols='50' rows='10'></textarea>");
+      $("#note").append("<textarea placeholder='your note' class='form-control' id='bodyinput' name='body' cols='50' rows='5'></textarea>");
       // A button to submit a new note, with the id of the article saved to it
       $("#note").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-info'>Save Note</button>");
-
-      // If there's a note in the article
+      // If there are notes in the article
       if (data.notes) {
-        // Place the title of the note in the title input
-        $("#titleinput").val(data.notes.title);
-        // Place the body of the note in the body textarea
-        $("#bodyinput").val(data.notes.body);
+        $("#oldNotes").empty();
+        for(var i = 0; i<data.notes.length; i++){
+        $("#oldNotes").append("<hr>"+data.notes[i].title+" says:<br>"+data.notes[i].body);
+
+        }
       }
     });
 });
