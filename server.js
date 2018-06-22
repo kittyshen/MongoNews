@@ -74,20 +74,20 @@ app.get("/save", function(req, res) {
   })
 });
 
+var counter;
 app.get("/scrape", function(req, res) {
+
   // First, we grab the body of the html with request
   // axios.get("http://www.echojs.com/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
   request("https://www.nytimes.com/section/technology?action=click&pgtype=Homepage&region=TopBar&module=HPMiniNav&contentCollection=Tech&WT.nav=page", function(error, response, html) {
-    // request("https://www.nytimes.com/section/business/economy?action=click&contentCollection=technology&region=navbar&module=collectionsnav&pagetype=sectionfront&pgtype=sectionfront", function(error, response, html) {
-    
-    var $ = cheerio.load(html);
 
+    var $ = cheerio.load(html);
+    var counter =0;
     // Now, we grab every h2 within an article tag, and do the following:
     $("div.story-meta").each(function(i, element) {
       // Save an empty result object
       var result = {};
-      // console.log("Crappe : sdajhdkhskdj",$(this).parent("a").children("div.wide-thumb"));//.attr("src")
       // Add the text and href of every link, and save them as properties of the result object
       result.title = $(this)
         .children("h2.headline")
@@ -98,11 +98,7 @@ app.get("/scrape", function(req, res) {
       result.link = $(this)
         .parent("a")
         .attr("href");
-      // result.imglink = $(this)
-      //   .parent("a")
-      //   .children("div.wide-thumb")
-      //   // .next("div.wide-thumb")
-      //   .attr("src");
+
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
@@ -110,25 +106,29 @@ app.get("/scrape", function(req, res) {
           // View the added result in the console
           if(dbArticle){
             console.log("*******************")
-            console.log(dbArticle);
-            return res.send(dbArticle.length);
+            // console.log(dbArticle);
+            counter ++;
+            res.send(dbArticle);
           }
           else 
            return res.send("0");
         })
         .catch(function(err) {
           // If an error occurred, send it to the client
-          // console.log(err);
-          // return res.json(err);
-          return res.send("0");
+          console.log(err);
+          // res.json(err);
+          return res.send("no new articles");
         });
-    });
-
+    })
+    
     // If we were able to successfully scrape and save an Article, send a message to the client
     // res.send("Scrape Complete");
   })
 
-}) ;
+    // res.send("Scrape Complete");
+
+
+});
 
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {

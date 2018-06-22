@@ -72,9 +72,14 @@
 <script type = "text/javascript">
 $("#scrape").on("click",function(){
   $.get("/scrape",function(data){
-    alert("scrape complete "+data+" article added");
+    swal("Good job!", "scrape complete! ", "success")
+    .then((value) => {
+      location.reload();
+     // swal(`The returned value is: ${value}`);
+    });
+    //alert("scrape complete "+data+" article added");
     console.log(data);
-    location.reload();
+    //location.reload();
   });
 });
 

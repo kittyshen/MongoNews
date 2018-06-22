@@ -94,11 +94,15 @@ db.places.drop()
 // How to drop a database
 db.dropDatabase()
 ```
+
+```js
+git remote rm heroku
 heroku create
 git remote -v
 heroku addons:create mongolab
 heroku config:get MONGODB_URI
 heroku logs -t
+```
 
 ## Link to the site
 [https://kitty-mongonews.herokuapp.com/](https://kitty-mongonews.herokuapp.com/)
