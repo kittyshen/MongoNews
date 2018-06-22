@@ -44,6 +44,9 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines
 mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
+// get the heroku mongodb info run this
+// heroku config:get MONGODB_URI
+
 // Routes
 
 // A GET route for scraping the echoJS website
@@ -51,7 +54,12 @@ app.get("/",function(req,res){
   db.Article.find({}).sort({_id:-1})
   .then(function(dbArticle){
     // res.json(dbArticle);
-    res.render("index",{article:dbArticle});
+    if(dbArticle){
+      res.render("index",{article:dbArticle});}
+    else{
+      res.render("index");
+    }
+
   })
 })
 
@@ -100,18 +108,24 @@ app.get("/scrape", function(req, res) {
       db.Article.create(result)
         .then(function(dbArticle) {
           // View the added result in the console
-          // console.log(dbArticle);
+          if(dbArticle){
+            console.log("*******************")
+            console.log(dbArticle);
+            return res.send(dbArticle.length);
+          }
+          else 
+           return res.send("0");
         })
         .catch(function(err) {
           // If an error occurred, send it to the client
-          console.log(err);
-          return res.json(err);
-          // return res.send(err);
+          // console.log(err);
+          // return res.json(err);
+          return res.send("0");
         });
     });
 
     // If we were able to successfully scrape and save an Article, send a message to the client
-    res.send("Scrape Complete");
+    // res.send("Scrape Complete");
   })
 
 }) ;

@@ -72,6 +72,7 @@
 <script type = "text/javascript">
 $("#scrape").on("click",function(){
   $.get("/scrape",function(data){
+    alert("scrape complete "+data+" article added");
     console.log(data);
     location.reload();
   });
