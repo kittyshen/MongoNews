@@ -108,7 +108,8 @@ app.get("/scrape", function(req, res) {
             console.log("*******************")
             // console.log(dbArticle);
             counter ++;
-            res.send(dbArticle);
+            // res.send(dbArticle);
+
           }
           else 
            return res.send("0");
@@ -116,8 +117,8 @@ app.get("/scrape", function(req, res) {
         .catch(function(err) {
           // If an error occurred, send it to the client
           console.log(err);
-          // res.json(err);
-          return res.send("no new articles");
+          res.json(err);
+          // return res.send("no new articles");
         });
     })
     
