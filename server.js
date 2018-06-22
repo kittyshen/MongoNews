@@ -74,7 +74,6 @@ app.get("/save", function(req, res) {
   })
 });
 
-var counter;
 app.get("/scrape", function(req, res) {
 
   // First, we grab the body of the html with request

@@ -104,6 +104,85 @@ heroku config:get MONGODB_URI
 heroku logs -t
 ```
 
+```js
+//how to scrape
+  request(url,function(error, response, html) {
+    // cherrio is jquery for backend
+    var $ = cheerio.load(html);
+    $("div.story-meta").each(function(i, element) {
+      // Save an empty result object
+      var result = {};
+
+      result.title = $(this)
+        .children("h2.headline")
+        .text();
+        ...
+        db.Article.create(result)
+        .then(function(dbArticle) {
+          ...
+        });
+    })
+  })
+```
+
+```js
+//Mongo Schema reference
+var mongoose = require("mongoose");
+
+var Schema = mongoose.Schema;
+
+var NoteSchema = new Schema({
+  // `title` is of type String
+  title: String,
+  // `body` is of type String
+  body: String
+});
+
+var Note = mongoose.model("Note", NoteSchema);
+// Export the Note model
+module.exports = Note;
+```
+
+```js
+//route for display a note to a article
+app.get("/articles/:id", function(req, res) {
+
+  var id = req.params.id;
+  db.Article.findOne( {_id:id})   //  db.Article.findOne(_id: id)
+  .populate("notes")
+  .then(function(dbArticle) {
+    res.json(dbArticle);
+  })
+});
+```
+
+```js
+// front end form for the note 
+$.ajax({
+    method: "GET",
+    url: "/articles/" + thisId
+  })
+  .then(function(data) {
+      console.log(data);
+      console.log(data._id);
+      $("#note").append("<h4>" + data.title + "</h4>");
+      $("#note").append("<input placeholder='your name' class='form-control' id='titleinput' name='title' >");
+
+      $("#note").append("<textarea placeholder='your note' class='form-control' id='bodyinput' name='body' cols='50' rows='5'></textarea>");
+      //data._id is the key here have to dynamicly generate it to save note to proper article
+      $("#note").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-info'>Save Note</button>");
+      // If there are notes in the article
+      if (data.notes) {
+        $("#oldNotes").empty();
+        for(var i = 0; i<data.notes.length; i++){
+        $("#oldNotes").append("<hr>"+data.notes[i].title+" says:<br>"+data.notes[i].body);
+
+        }
+      }
+    });
+```
+
+
 ## Link to the site
 [https://kitty-mongonews.herokuapp.com/](https://kitty-mongonews.herokuapp.com/)
 
