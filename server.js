@@ -3,7 +3,7 @@ var bodyParser = require("body-parser");
 // var logger = require("morgan");
 var mongoose = require("mongoose");
 var request = require("request");
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 
 
 // Our scraping tools
@@ -15,7 +15,7 @@ var cheerio = require("cheerio");
 // Require all models
 var db = require("./models");
 
-var PORT = 8080;
+// var PORT = 8080;
 
 // Initialize Express
 var app = express();
@@ -43,8 +43,8 @@ app.set("view engine", "handlebars");
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
-// mongoose.Promise = Promise;
-mongoose.Promise = global.Promise;
+mongoose.Promise = Promise;
+// mongoose.Promise = global.Promise;
 
 mongoose.connect(MONGODB_URI);
 
