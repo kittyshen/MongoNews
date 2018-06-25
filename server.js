@@ -41,7 +41,9 @@ app.set("view engine", "handlebars");
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
-mongoose.Promise = Promise;
+// mongoose.Promise = Promise;
+mongoose.Promise = global.Promise;
+
 mongoose.connect(MONGODB_URI);
 
 // get the heroku mongodb info run this
@@ -70,7 +72,6 @@ app.get("/save", function(req, res) {
   .then(function(dbArticle) {
     // res.json(dbArticle);
     res.render("save",{article:dbArticle});
-
   })
 });
 
@@ -120,14 +121,10 @@ app.get("/scrape", function(req, res) {
           // return res.send("no new articles");
         });
     })
-    
     // If we were able to successfully scrape and save an Article, send a message to the client
     // res.send("Scrape Complete");
   })
-
     // res.send("Scrape Complete");
-
-
 });
 
 // Route for getting all Articles from the db
