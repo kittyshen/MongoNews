@@ -18,14 +18,17 @@ In this assignment, you'll create a web app that lets users view and leave comme
 10. In order to deploy your project to Heroku, you must set up an mLab provision. mLab is remote MongoDB database that Heroku supports natively. Follow these steps to get it running:
 
 11. Create a Heroku app in your project directory.
-
-12. Run this command in your Terminal/Bash window:
+12. set the port on server.js to
+```js
+const PORT = process.env.PORT || 8080;
+```
+13. Run this command in your Terminal/Bash window:
 
     * `heroku addons:create mongolab`
 
     * This command will add the free mLab provision to your project.
 
-13. When you go to connect your mongo database to mongoose, do so the following way:
+14. When you go to connect your mongo database to mongoose, do so the following way:
 
 ```js
 // If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
@@ -99,6 +102,7 @@ db.dropDatabase()
 git remote rm heroku
 heroku create
 git remote -v
+git remote rm abcdef
 heroku addons:create mongolab
 heroku config:get MONGODB_URI
 heroku logs -t
