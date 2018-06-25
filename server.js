@@ -3,6 +3,8 @@ var bodyParser = require("body-parser");
 // var logger = require("morgan");
 var mongoose = require("mongoose");
 var request = require("request");
+const PORT = process.env.PORT || 3001;
+
 
 // Our scraping tools
 // Axios is a promised-based http library, similar to jQuery's Ajax method
